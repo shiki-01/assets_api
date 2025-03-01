@@ -1,0 +1,16 @@
+{
+  "name": "assets_api",
+  "scripts": {
+    "dev": "wrangler dev src/index.ts",
+    "deploy": "wrangler deploy --minify"
+  },
+  "dependencies": {
+    "formidable": "^3.5.2",
+    "hono": "^4.7.2"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "@types/formidable": "^3.4.5",
+    "wrangler": "^3.109.2"
+  }
+}
