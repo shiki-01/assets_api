@@ -18,6 +18,8 @@ app.get('/', (c) => {
 //テキストファイルなら中身を表示
 
 app.post('/upload', async (c) => {
+    console.log(c.req);
+
     const file = await c.req.formData();
     const fileObj = file.get('file');
     let text = '';
@@ -26,13 +28,16 @@ app.post('/upload', async (c) => {
         if (typeof fileObj.valueOf() === 'string') {
             text = fileObj.valueOf() as string;
         } else {
-            const reader = fileObj.valueOf() as ArrayBuffer | null;
+            const reader = await (fileObj as File).arrayBuffer();
             const decoder = new TextDecoder();
-            text = reader ? decoder.decode(reader) : '';
+            text = decoder.decode(reader);
         }
     }
 
-    return c.text(text);
+    return c.json({
+        responseType: 'text',
+        text: text
+    })
 })
 
 export default app;
