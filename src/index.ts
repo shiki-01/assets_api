@@ -1,6 +1,9 @@
 import {Hono} from 'hono';
+import { cors } from 'hono/cors';
 
 const app = new Hono<{ Bindings: Bindings }>();
+
+app.use('*', cors());
 
 type Bindings = {
     CLIENT_ID: string;
