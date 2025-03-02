@@ -1,43 +1,16 @@
-import {Hono} from 'hono';
+import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { type HonoType } from 'lib/constant';
+import { v1 } from './api/v1';
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<HonoType>();
 
-app.use('*', cors());
+const router = app
+	.use('*', cors())
+	.get('/', (c) => {
+		return c.json({ message: 'Hello Assets!' });
+	})
+	.route('/v1', v1);
 
-type Bindings = {
-    CLIENT_ID: string;
-    CLIENT_SECRET: string;
-}
-
-app.get('/', (c) => {
-    return c.text('Hello, World!');
-})
-
-//テストでファイルを受け取るコード
-//テキストファイルなら中身を表示
-
-app.post('/upload', async (c) => {
-    console.log(c.req);
-
-    const file = await c.req.formData();
-    const fileObj = file.get('file');
-    let text = '';
-
-    if (file && fileObj) {
-        if (typeof fileObj.valueOf() === 'string') {
-            text = fileObj.valueOf() as string;
-        } else {
-            const reader = await (fileObj as File).arrayBuffer();
-            const decoder = new TextDecoder();
-            text = decoder.decode(reader);
-        }
-    }
-
-    return c.json({
-        responseType: 'text',
-        text: text
-    })
-})
-
+export type AppType = typeof router;
 export default app;
